@@ -274,8 +274,8 @@
                     }
                 }
                 
-                // Reset flag passed jika halangan sudah jauh di kiri
-                if (oRect.right < 0) {
+                // Reset flag passed HANYA jika halangan sudah ngulang dari sebelah kanan lagi
+                if (oRect.left > pRect.right) {
                     passed = false;
                 }
 
