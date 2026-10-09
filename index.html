@@ -64,8 +64,8 @@
 
         #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 50px; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
         
-        /* Kecepatan default di CSS, nanti dioverride JS */
-        .move { animation: moveAnim 1.4s infinite linear; }
+        /* Kecepatan konstan dan santai di 1.5 detik */
+        .move { animation: moveAnim 1.5s infinite linear; }
         @keyframes moveAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-120vw); } }
 
         #ground {
@@ -189,12 +189,12 @@
     <div id="game-area">
         <div id="score-board">Lolos: 0 / 5</div>
         <div class="tap-hint">👆 TAP LAYAR UNTUK LOMPAT</div>
-        <div id="crash-msg">💥 Kena Mental!<br>Ulangi lagi...</div>
+        <div id="crash-msg">💥 Bisa Gak!<br>Ulangi lagi...</div>
         <div class="sun">🌞</div>
         <div class="cloud" style="top: 20px; animation-duration: 12s;">☁️</div>
         <div class="cloud" style="top: 70px; font-size:30px; animation-duration: 18s; animation-delay: 2s;">☁️</div>
         <div id="player">🐱</div>
-        <div id="obstacle" style="animation-duration: 1.4s;">📑</div>
+        <div id="obstacle">📑</div>
         <div id="ground"></div>
     </div>
 
@@ -202,7 +202,7 @@
     <div id="win-modal">
         <div class="glass-card">
             <div class="card-header">🎂</div>
-            <h1>Yeeaaaayy Berhasil!</h1>
+            <h1>Yeeeaaaayy Berhasil!</h1>
             <p>
                 Happy Birthday Mba Ebhy! 🎉<br><br>
                 Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal kerjaan sebenarnya <span class="highlight">gak ada wkwk</span>. Sehat dan sukses terus ya!<br><br>
@@ -242,7 +242,6 @@
         let score = 0; 
         let passed = false; 
         let gameLoopId; 
-        let currentSpeed = 1.4;
 
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
@@ -295,11 +294,8 @@
                 if (oRect.left > pRect.right) {
                     if(passed) {
                         passed = false;
-                        // Ganti emoji acak
+                        // Ganti emoji acak (Kecepatan tetap konstan)
                         obstacle.innerText = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
-                        // Percepat laju rintangan dikit-dikit
-                        currentSpeed = Math.max(0.9, 1.4 - (score * 0.1));
-                        obstacle.style.animationDuration = currentSpeed + 's';
                     }
                 }
 
@@ -330,8 +326,6 @@
                 obstacle.style.animationPlayState = 'running'; 
                 player.style.animationPlayState = 'running';
                 obstacle.innerText = '📑';
-                currentSpeed = 1.4;
-                obstacle.style.animationDuration = currentSpeed + 's';
                 
                 score = 0; 
                 passed = false; 
