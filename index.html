@@ -58,14 +58,18 @@
         .cloud { position: absolute; left: 100%; opacity: 0.6; font-size: 40px; animation: floatClouds infinite linear; }
         @keyframes floatClouds { 0% { transform: translateX(0); } 100% { transform: translateX(-150vw); } }
 
-        #player { position: absolute; bottom: 30px; left: 50px; font-size: 50px; z-index: 10; }
-        .jump { animation: jumpAnim 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
-        @keyframes jumpAnim { 0% { transform: translateY(0); } 50% { transform: translateY(-160px); } 100% { transform: translateY(0); } }
-
-        #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 50px; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
+        /* Kucing sedikit diperkecil agar hitbox aman */
+        #player { position: absolute; bottom: 30px; left: 50px; font-size: 45px; z-index: 10; }
         
-        /* Kecepatan konstan dan santai di 1.5 detik */
-        .move { animation: moveAnim 1.5s infinite linear; }
+        /* Animasi lompat dibuat lebih lama (0.7s) dan lebih tinggi (-180px) */
+        .jump { animation: jumpAnim 0.7s cubic-bezier(0.175, 0.885, 0.32, 1); }
+        @keyframes jumpAnim { 0% { transform: translateY(0); } 50% { transform: translateY(-180px); } 100% { transform: translateY(0); } }
+
+        /* Rintangan diperkecil (40px) agar gampang dilompati */
+        #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 40px; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
+        
+        /* Kecepatan lebih lambat (1.8 detik) */
+        .move { animation: moveAnim 1.8s infinite linear; }
         @keyframes moveAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-120vw); } }
 
         #ground {
@@ -118,7 +122,6 @@
         .punch-title { font-size: 2rem; font-weight: 900; color: #fbc531; margin-bottom: 10px; line-height: 1.2; text-shadow: 0 0 10px rgba(251, 197, 49, 0.5);}
         .punch-sub { font-size: 0.95rem; color: #94a3b8; margin-bottom: 40px; }
 
-        /* Mesin Slot UI */
         .slot-machine {
             background: #0f172a; border: 4px solid #334155; padding: 25px 20px;
             font-size: 1.3rem; font-weight: 900; border-radius: 15px; margin-bottom: 40px;
@@ -157,7 +160,6 @@
         }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Efek gempa saat zonk */
         .shake-screen { animation: earthquake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes earthquake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
@@ -198,11 +200,10 @@
         <div id="ground"></div>
     </div>
 
-    <!-- Tampilan Glassmorphism -->
     <div id="win-modal">
         <div class="glass-card">
             <div class="card-header">🎂</div>
-            <h1>Yeeeaaaayy Berhasil!</h1>
+            <h1>Yeeeeaaayyy Berhasil!</h1>
             <p>
                 Happy Birthday Mba Ebhy! 🎉<br><br>
                 Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal kerjaan sebenarnya <span class="highlight">gak ada wkwk</span>. Sehat dan sukses terus ya!<br><br>
@@ -212,7 +213,6 @@
         </div>
     </div>
 
-    <!-- Tampilan Mesin Slot -->
     <div id="punchline-screen">
         <div class="punch-title">🎰 GACHA ULTAH 🎰</div>
         <div class="punch-sub">Tekan tombol SPIN untuk mengacak kado Istimewa-mu hari ini!</div>
@@ -235,7 +235,6 @@
         const scoreBoard = document.getElementById("score-board");
         const crashMsg = document.getElementById("crash-msg");
         
-        // Array Rintangan biar berubah-ubah
         const obstacleTypes = ['📑', '🤬', '⏰', '📉', '🗂️']; 
         
         let isPlaying = false; 
@@ -259,7 +258,8 @@
             if (!isPlaying) return;
             if (!player.classList.contains("jump")) {
                 player.classList.add("jump");
-                setTimeout(() => { player.classList.remove("jump"); }, 550);
+                // Timeout diganti jadi 700ms sesuai durasi animasi lompat yang baru
+                setTimeout(() => { player.classList.remove("jump"); }, 700);
             }
         });
 
@@ -270,15 +270,16 @@
                 let pRect = player.getBoundingClientRect();
                 let oRect = obstacle.getBoundingClientRect();
 
-                let hitX = pRect.right - 15 > oRect.left && pRect.left + 15 < oRect.right;
-                let hitY = pRect.bottom > oRect.top + 10;
+                // Toleransi tabrakan DIBESARKAN SUPER EXTREME biar gampang banget
+                // Kucing harus bener-bener menembus setengah badan rintangan baru dianggap nabrak
+                let hitX = pRect.right - 25 > oRect.left && pRect.left + 25 < oRect.right;
+                let hitY = pRect.bottom > oRect.top + 20;
 
                 if (hitX && hitY) {
                     gameOver();
                     return; 
                 }
 
-                // Skor nambah
                 if (oRect.right < pRect.left && !passed) {
                     passed = true; 
                     score++; 
@@ -290,11 +291,9 @@
                     }
                 }
                 
-                // Reset passed dan ganti emoji rintangan saat rintangan ngulang dari kanan
                 if (oRect.left > pRect.right) {
                     if(passed) {
                         passed = false;
-                        // Ganti emoji acak (Kecepatan tetap konstan)
                         obstacle.innerText = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
                     }
                 }
@@ -322,7 +321,6 @@
                 player.classList.remove("jump");
                 void obstacle.offsetWidth; 
                 
-                // Kembalikan setingan ke awal
                 obstacle.style.animationPlayState = 'running'; 
                 player.style.animationPlayState = 'running';
                 obstacle.innerText = '📑';
@@ -348,7 +346,6 @@
             setTimeout(() => { document.getElementById("win-modal").classList.add("show"); }, 500);
         }
 
-        // --- PUNCHLINE LOGIC ---
         function triggerPunchline() {
             document.getElementById("win-modal").style.display = "none";
             document.getElementById("punchline-screen").style.display = "flex";
@@ -371,16 +368,14 @@
             
             let rollInterval = setInterval(() => {
                 resultBox.innerHTML = `<span style="position:relative; z-index:10;">${spinOptions[Math.floor(Math.random() * spinOptions.length)]}</span>`;
-            }, 70); // Putar sangat cepat ala mesin slot
+            }, 70); 
 
-            // Berhenti setelah 4.5 detik
             setTimeout(() => {
                 clearInterval(rollInterval);
                 resultBox.classList.remove('spinning');
                 resultBox.classList.add('winner');
                 resultBox.innerHTML = `<span style="position:relative; z-index:10;">${finalJoke}</span>`;
                 
-                // Bikin seluruh body bergetar pas zonk
                 document.body.classList.add('shake-screen');
                 setTimeout(() => document.body.classList.remove('shake-screen'), 500);
 
