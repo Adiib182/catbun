@@ -8,163 +8,172 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&family=VT323&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; } /* touch-action none penting agar layar tidak ketarik */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; }
 
         body {
-            background-color: #2c3e50; font-family: 'Poppins', sans-serif;
+            background-color: #1a1a2e; font-family: 'Poppins', sans-serif;
             display: flex; align-items: center; justify-content: center;
             height: 100vh; overflow: hidden; position: relative; transition: background 0.5s;
         }
 
         /* --- Tampilan Awal Layar --- */
         #start-screen {
-            position: absolute; z-index: 100; background: rgba(0, 0, 0, 0.85);
+            position: absolute; z-index: 100; background: rgba(15, 23, 42, 0.95);
             width: 100%; height: 100%; display: flex; flex-direction: column;
             align-items: center; justify-content: center; text-align: center;
             padding: 30px; color: #fff;
         }
-        #start-screen h1 { font-family: 'VT323', monospace; font-size: 3.5rem; color: #f1c40f; text-shadow: 4px 4px #e67e22; margin-bottom: 20px; line-height: 1; }
-        #start-screen p { font-size: 1.1rem; max-width: 400px; line-height: 1.6; margin-bottom: 40px; font-weight: 600; }
+        #start-screen h1 { font-family: 'VT323', monospace; font-size: 3.8rem; color: #00d2ff; text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); margin-bottom: 20px; line-height: 1; }
+        #start-screen p { font-size: 1.1rem; max-width: 400px; line-height: 1.6; margin-bottom: 40px; color: #94a3b8; }
 
         .btn-start {
-            background: #e74c3c; border: 4px solid #c0392b; color: white;
+            background: linear-gradient(45deg, #ff007a, #7a00ff); border: none; color: white;
             font-family: 'VT323', monospace; font-size: 2.5rem; padding: 10px 40px;
-            cursor: pointer; border-radius: 10px; box-shadow: 0 5px 0 #c0392b;
+            cursor: pointer; border-radius: 50px; box-shadow: 0 8px 20px rgba(122, 0, 255, 0.4);
+            transition: transform 0.1s;
         }
-        .btn-start:active { transform: translateY(5px); box-shadow: 0 0 0 #c0392b; }
+        .btn-start:active { transform: translateY(5px); box-shadow: 0 0 0; }
 
         /* --- Area Game --- */
         #game-area {
             position: relative; width: 100%; max-width: 800px; height: 350px;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
-            display: none; overflow: hidden; border: 5px solid #34495e; border-radius: 10px;
+            background: linear-gradient(to bottom, #2b4162 0%, #fa9c7a 100%);
+            display: none; overflow: hidden; border: 4px solid #fff; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(250, 156, 122, 0.3);
         }
-        #score-board { position: absolute; top: 20px; left: 20px; font-family: 'VT323', monospace; font-size: 1.8rem; color: #2c3e50; z-index: 10; font-weight: bold;}
-        .tap-hint { position: absolute; top: 40%; width: 100%; text-align: center; font-family: 'VT323', monospace; font-size: 1.5rem; color: #e74c3c; animation: blink 1.5s infinite; opacity: 0.6; pointer-events: none; }
+        #score-board { position: absolute; top: 20px; left: 20px; font-family: 'VT323', monospace; font-size: 2rem; color: #fff; z-index: 10; font-weight: bold; text-shadow: 2px 2px 0 #000;}
+        .tap-hint { position: absolute; top: 40%; width: 100%; text-align: center; font-family: 'VT323', monospace; font-size: 1.5rem; color: #fff; animation: blink 1.5s infinite; opacity: 0.6; pointer-events: none; text-shadow: 2px 2px 0 #000;}
         @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
-        /* Pesan Ketabrak (Pengganti Alert) */
         #crash-msg {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(231, 76, 60, 0.9); color: white; padding: 15px 30px;
-            border-radius: 10px; font-weight: bold; font-size: 1.2rem; text-align: center;
-            z-index: 50; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #ff4757; color: white; padding: 15px 30px;
+            border-radius: 10px; font-weight: 900; font-size: 1.2rem; text-align: center;
+            z-index: 50; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 3px solid #fff;
         }
 
-        .sun { position: absolute; top: 20px; right: 40px; font-size: 50px; }
+        .sun { position: absolute; top: 30px; right: 40px; font-size: 40px; animation: pulseSun 2s infinite alternate;}
+        @keyframes pulseSun { from { transform: scale(1); filter: brightness(1); } to { transform: scale(1.1); filter: brightness(1.2); } }
         
-        /* Awan dipindah menggunakan Transform (Hardware Accelerated) */
-        .cloud { position: absolute; left: 100%; opacity: 0.8; font-size: 40px; animation: floatClouds infinite linear; }
-        @keyframes floatClouds { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-150vw); } 
-        }
+        .cloud { position: absolute; left: 100%; opacity: 0.6; font-size: 40px; animation: floatClouds infinite linear; }
+        @keyframes floatClouds { 0% { transform: translateX(0); } 100% { transform: translateX(-150vw); } }
 
-        /* Player dipindah menggunakan Transform Y */
         #player { position: absolute; bottom: 30px; left: 50px; font-size: 50px; z-index: 10; }
-        .jump { animation: jumpAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1); }
-        @keyframes jumpAnim { 
-            0% { transform: translateY(0); } 
-            50% { transform: translateY(-160px); } 
-            100% { transform: translateY(0); } 
-        }
+        .jump { animation: jumpAnim 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
+        @keyframes jumpAnim { 0% { transform: translateY(0); } 50% { transform: translateY(-160px); } 100% { transform: translateY(0); } }
 
-        /* Obstacle dipindah menggunakan Transform X */
-        #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 50px; z-index: 10; }
+        #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 50px; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
+        
+        /* Kecepatan default di CSS, nanti dioverride JS */
         .move { animation: moveAnim 1.4s infinite linear; }
-        @keyframes moveAnim { 
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-120vw); } 
-        }
+        @keyframes moveAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-120vw); } }
 
         #ground {
             position: absolute; bottom: 0; width: 100%; height: 30px;
-            background: repeating-linear-gradient(45deg, #f1c40f, #f1c40f 20px, #34495e 20px, #34495e 40px);
-            z-index: 5; border-top: 3px solid #2c3e50;
+            background: repeating-linear-gradient(45deg, #2f3542, #2f3542 20px, #1e272e 20px, #1e272e 40px);
+            z-index: 5; border-top: 4px solid #fff;
         }
 
-        /* --- Kartu Hadiah (Menang) --- */
+        /* --- Kartu Hadiah (Glassmorphism) --- */
         #win-modal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95); display: flex; align-items: center; justify-content: center;
+            background: rgba(10, 10, 10, 0.8); display: flex; align-items: center; justify-content: center;
             z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
         }
         #win-modal.show { opacity: 1; pointer-events: all; }
 
-        .card {
-            background: linear-gradient(135deg, #1e272e, #2f3640); width: 90%; max-width: 400px; padding: 30px 20px;
-            border-radius: 25px; text-align: center; transform: translateY(50px) scale(0.8);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            width: 90%; max-width: 400px; padding: 40px 25px 30px;
+            border-radius: 20px; text-align: center; transform: translateY(50px) scale(0.8);
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(232, 65, 24, 0.4);
-            border: 2px solid #e84118; color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            color: white; position: relative;
         }
-        #win-modal.show .card { transform: translateY(0) scale(1); }
+        #win-modal.show .glass-card { transform: translateY(0) scale(1); }
 
-        .card-header { font-size: 4rem; margin-top: -60px; animation: bounce 1.5s infinite; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .card-header { font-size: 4.5rem; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: floatBadge 2s infinite ease-in-out; }
+        @keyframes floatBadge { 0%, 100% { top: -40px; } 50% { top: -50px; } }
 
-        .card h1 { font-size: 1.6rem; color: #fbc531; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;}
-        .card p { font-size: 0.95rem; color: #dcdde1; line-height: 1.6; margin-bottom: 25px; }
-        .highlight { color: #00a8ff; font-weight: bold; }
-
-        .arrow-down { font-size: 1.8rem; animation: pointDown 0.6s infinite alternate; margin-bottom: 5px; display: block; }
-        @keyframes pointDown { from { transform: translateY(0); } to { transform: translateY(10px); } }
+        .glass-card h1 { font-size: 1.8rem; color: #00d2ff; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px;}
+        .glass-card p { font-size: 0.95rem; color: #e2e8f0; line-height: 1.6; margin-bottom: 25px; }
+        .highlight { color: #fbc531; font-weight: bold; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 5px;}
 
         .btn-claim {
-            background: linear-gradient(45deg, #00a8ff, #9c88ff); color: white;
-            border: none; padding: 15px 20px; border-radius: 15px;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5); color: white;
+            border: none; padding: 15px 20px; border-radius: 50px;
             font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 1.1rem;
-            width: 100%; cursor: pointer; box-shadow: 0 6px 0 #273c75, 0 10px 20px rgba(0, 168, 255, 0.4);
-            animation: pulse 1.2s infinite; transition: transform 0.1s; letter-spacing: 1px;
+            width: 100%; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 210, 255, 0.4);
+            animation: pulseBtn 1.5s infinite; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase;
         }
-        .btn-claim:active { transform: translateY(6px); box-shadow: 0 0 0 #273c75; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .btn-claim:active { transform: scale(0.95); box-shadow: 0 0 0; }
+        @keyframes pulseBtn { 0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(0, 210, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); } }
 
-        /* --- PUNCHLINE: ROULETTE UNDIAN --- */
+        /* --- PUNCHLINE: ROULETTE UNDIAN (SLOT MACHINE STYLE) --- */
         #punchline-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f5f6fa; display: none; flex-direction: column; z-index: 300;
-            align-items: center; justify-content: center; padding: 20px; text-align: center;
+            background: radial-gradient(circle at center, #2c3e50, #0f172a); display: none; flex-direction: column; z-index: 300;
+            align-items: center; justify-content: center; padding: 20px; text-align: center; color: white;
         }
+        .punch-title { font-size: 2rem; font-weight: 900; color: #fbc531; margin-bottom: 10px; line-height: 1.2; text-shadow: 0 0 10px rgba(251, 197, 49, 0.5);}
+        .punch-sub { font-size: 0.95rem; color: #94a3b8; margin-bottom: 40px; }
 
-        .punch-title { font-size: 2.2rem; font-weight: 900; color: #2f3542; margin-bottom: 10px; line-height: 1.1; }
-        .punch-sub { font-size: 1rem; color: #7f8fa6; margin-bottom: 30px; }
-
-        .spin-box {
-            background: white; border: 5px dashed #00a8ff; padding: 20px;
-            font-size: 1.5rem; font-weight: 900; border-radius: 20px; margin-bottom: 30px;
+        /* Mesin Slot UI */
+        .slot-machine {
+            background: #0f172a; border: 4px solid #334155; padding: 25px 20px;
+            font-size: 1.3rem; font-weight: 900; border-radius: 15px; margin-bottom: 40px;
             width: 100%; max-width: 350px; min-height: 120px; display: flex;
-            align-items: center; justify-content: center; color: #2f3542;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: all 0.3s ease;
+            align-items: center; justify-content: center; color: #00d2ff;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease; text-transform: uppercase; position: relative; overflow: hidden;
         }
-        .spin-box.spinning { 
-            color: #dcdde1; border-color: #dcdde1; 
-            animation: shake 0.2s infinite; 
-        }
-        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
         
-        .spin-box.winner { 
-            background: #ff4757; color: white; border: 5px solid #c23616; 
-            transform: scale(1.1); box-shadow: 0 15px 30px rgba(255, 71, 87, 0.4);
+        .slot-machine::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 100% 4px; pointer-events: none; z-index: 2; opacity: 0.3;}
+
+        .slot-machine.spinning { 
+            color: #fff; text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
+            animation: slotBlur 0.1s infinite;
+        }
+        @keyframes slotBlur { 0% { filter: blur(0px); transform: translateY(2px); } 50% { filter: blur(2px); transform: translateY(-2px); } 100% { filter: blur(0px); transform: translateY(0); } }
+        
+        .slot-machine.winner { 
+            background: #ff4757; color: white; border-color: #ff4757; 
+            text-shadow: 2px 2px 0 #000; box-shadow: 0 0 40px rgba(255, 71, 87, 0.8);
+            transform: scale(1.05);
         }
 
         .btn-spin {
-            background: #e1b12c; color: white; border: none; padding: 15px 40px;
+            background: linear-gradient(to bottom, #fbc531, #e1b12c); color: #000; border: none; padding: 15px 50px;
             border-radius: 50px; font-weight: 900; font-size: 1.5rem; cursor: pointer;
-            box-shadow: 0 8px 0 #c23616; transition: transform 0.1s; width: 80%; max-width: 300px;
+            box-shadow: 0 6px 0 #c28f00, 0 10px 20px rgba(0,0,0,0.4); transition: transform 0.1s; text-transform: uppercase;
         }
-        .btn-spin:active { transform: translateY(8px); box-shadow: 0 0 0 #c23616; }
+        .btn-spin:active { transform: translateY(6px); box-shadow: 0 0 0 #c28f00; }
 
         #final-msg {
-            display: none; margin-top: 30px; font-size: 1.1rem; color: #2f3542;
-            font-weight: 600; line-height: 1.6; background: white; padding: 20px;
-            border-radius: 15px; border-left: 5px solid #2ed573; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            animation: slideUp 0.5s ease forwards; opacity: 0; transform: translateY(20px);
+            display: none; margin-top: 30px; font-size: 1.1rem; color: #fff;
+            font-weight: 600; line-height: 1.6; background: rgba(255, 255, 255, 0.1); padding: 20px;
+            border-radius: 15px; border-left: 5px solid #ff4757; backdrop-filter: blur(5px);
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: translateY(30px);
         }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Konfeti */
-        .confetti { position: absolute; width: 10px; height: 10px; z-index: 999; animation: fall linear forwards; border-radius: 2px;}
+        /* Efek gempa saat zonk */
+        .shake-screen { animation: earthquake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes earthquake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .confetti { position: absolute; width: 8px; height: 15px; z-index: 999; animation: fall linear forwards; border-radius: 2px;}
         @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
     </style>
@@ -173,41 +182,47 @@
 
     <div id="start-screen">
         <h1>OFFICE RUSH</h1>
-        <p>Bantu kucing ini kabur dari tumpukan PSM & Surat Konfirmasi! Lompatin semuanya buat ambil kadomu!</p>
+        <p>Bantu kucing ini kabur dari kejaran kantor! Lompati rintangan buat buka Gacha Kadomu!</p>
         <button class="btn-start" onclick="startGame()">START 🎮</button>
     </div>
 
     <div id="game-area">
         <div id="score-board">Lolos: 0 / 5</div>
-        <div class="tap-hint">👆 TAP LAYAR</div>
-        <div id="crash-msg">Ketabrak PSM!<br>Mengulang...</div>
-        <div class="sun">☀️</div>
-        <div class="cloud" style="top: 20px; animation-duration: 15s;">☁️</div>
-        <div class="cloud" style="top: 70px; font-size:30px; animation-duration: 20s; animation-delay: 2s;">☁️</div>
+        <div class="tap-hint">👆 TAP LAYAR UNTUK LOMPAT</div>
+        <div id="crash-msg">💥 Kena Mental!<br>Ulangi lagi...</div>
+        <div class="sun">🌞</div>
+        <div class="cloud" style="top: 20px; animation-duration: 12s;">☁️</div>
+        <div class="cloud" style="top: 70px; font-size:30px; animation-duration: 18s; animation-delay: 2s;">☁️</div>
         <div id="player">🐱</div>
-        <div id="obstacle">📑</div>
+        <div id="obstacle" style="animation-duration: 1.4s;">📑</div>
         <div id="ground"></div>
     </div>
 
+    <!-- Tampilan Glassmorphism -->
     <div id="win-modal">
-        <div class="card">
+        <div class="glass-card">
             <div class="card-header">🎂</div>
-            <h1>Yeeeaaaayyy Berhasil!</h1>
+            <h1>Yeeaaaayy Berhasil!</h1>
             <p>
                 Happy Birthday Mba Ebhy! 🎉<br><br>
-                Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal mah pura - pura kerja <span class="highlight">wkwkwkwk</span>. Sehat dan sukses terus ya!<br><br>
-                Sebagai apresiasi, gue udah siapin <span class="highlight">Sistem Undian</span> buat nentuin Kado Istimewa lo hari ini!
+                Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal kerjaan sebenarnya <span class="highlight">gak ada wkwk</span>. Sehat dan sukses terus ya!<br><br>
+                Gue udah nyiapin <span class="highlight">Sistem Gacha</span> buat nentuin kado spesial lo hari ini. Good luck!
             </p>
-            <span class="arrow-down">⬇️ ⬇️ ⬇️</span>
-            <button class="btn-claim" onclick="triggerPunchline()">🎁 TENTUKAN KADOMU!</button>
+            <button class="btn-claim" onclick="triggerPunchline()">🎰 BUKA GACHA KADO!</button>
         </div>
     </div>
 
+    <!-- Tampilan Mesin Slot -->
     <div id="punchline-screen">
-        <div class="punch-title">MESIN UNDIAN<br>ULANG TAHUN 🎰</div>
+        <div class="punch-title">🎰 GACHA ULTAH 🎰</div>
         <div class="punch-sub">Tekan tombol SPIN untuk mengacak kado Istimewa-mu hari ini!</div>
-        <div class="spin-box" id="spin-result">???</div>
-        <button class="btn-spin" id="spin-btn" onclick="startSpin()">SPIN SEKARANG!</button>
+        
+        <div class="slot-machine" id="spin-result">
+            <span style="position: relative; z-index: 10;">TAP SPIN BUTTON</span>
+        </div>
+        
+        <button class="btn-spin" id="spin-btn" onclick="startSpin()">SPIN!</button>
+        
         <div id="final-msg">
             Wkwkwk muka lu pasti sempet kegirangan kan 😂<br><br>
             Happy birthday sekali lagi ya! Doa terbaik buat lu. Btw, traktiran tetep ditunggu (seikhlasnya aja asal enak). 🥂
@@ -220,10 +235,14 @@
         const scoreBoard = document.getElementById("score-board");
         const crashMsg = document.getElementById("crash-msg");
         
+        // Array Rintangan biar berubah-ubah
+        const obstacleTypes = ['📑', '🤬', '⏰', '📉', '🗂️']; 
+        
         let isPlaying = false; 
         let score = 0; 
         let passed = false; 
         let gameLoopId; 
+        let currentSpeed = 1.4;
 
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
@@ -235,15 +254,13 @@
             }, 600);
         }
 
-        // Pointer down lebih responsif di HP
         document.addEventListener('pointerdown', (e) => {
-            // Hindari lompat kepencet pas lagi pencet tombol start/spin
             if(e.target.tagName === 'BUTTON') return; 
             
             if (!isPlaying) return;
             if (!player.classList.contains("jump")) {
                 player.classList.add("jump");
-                setTimeout(() => { player.classList.remove("jump"); }, 600);
+                setTimeout(() => { player.classList.remove("jump"); }, 550);
             }
         });
 
@@ -254,7 +271,6 @@
                 let pRect = player.getBoundingClientRect();
                 let oRect = obstacle.getBoundingClientRect();
 
-                // Hitbox Collision yang lebih rapi (Toleransi 15px agar tidak kaku)
                 let hitX = pRect.right - 15 > oRect.left && pRect.left + 15 < oRect.right;
                 let hitY = pRect.bottom > oRect.top + 10;
 
@@ -263,20 +279,28 @@
                     return; 
                 }
 
-                // Hitung Skor
+                // Skor nambah
                 if (oRect.right < pRect.left && !passed) {
                     passed = true; 
                     score++; 
                     scoreBoard.innerText = `Lolos: ${score} / 5`;
+                    
                     if (score >= 5) {
                         winGame();
                         return;
                     }
                 }
                 
-                // Reset flag passed HANYA jika halangan sudah ngulang dari sebelah kanan lagi
+                // Reset passed dan ganti emoji rintangan saat rintangan ngulang dari kanan
                 if (oRect.left > pRect.right) {
-                    passed = false;
+                    if(passed) {
+                        passed = false;
+                        // Ganti emoji acak
+                        obstacle.innerText = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+                        // Percepat laju rintangan dikit-dikit
+                        currentSpeed = Math.max(0.9, 1.4 - (score * 0.1));
+                        obstacle.style.animationDuration = currentSpeed + 's';
+                    }
                 }
 
                 gameLoopId = requestAnimationFrame(update);
@@ -288,44 +312,44 @@
             isPlaying = false; 
             cancelAnimationFrame(gameLoopId);
             
-            // Hentikan animasi
             obstacle.style.animationPlayState = 'paused'; 
             player.style.animationPlayState = 'paused';
             
-            // Tampilkan pesan ketabrak (ganti fungsi alert browser)
+            document.getElementById('game-area').classList.add('shake-screen');
             crashMsg.style.display = 'block';
             
             setTimeout(() => {
+                document.getElementById('game-area').classList.remove('shake-screen');
                 crashMsg.style.display = 'none';
                 
-                // Reset posisi & skor
                 obstacle.classList.remove("move"); 
                 player.classList.remove("jump");
-                
-                // Trigger reflow sejenak
                 void obstacle.offsetWidth; 
                 
+                // Kembalikan setingan ke awal
                 obstacle.style.animationPlayState = 'running'; 
                 player.style.animationPlayState = 'running';
+                obstacle.innerText = '📑';
+                currentSpeed = 1.4;
+                obstacle.style.animationDuration = currentSpeed + 's';
                 
                 score = 0; 
                 passed = false; 
                 scoreBoard.innerText = `Lolos: ${score} / 5`;
                 
-                // Mulai ulang
                 setTimeout(() => { 
                     obstacle.classList.add("move"); 
                     isPlaying = true; 
                     startGameLoop(); 
                 }, 200);
-            }, 1500); // Jeda 1.5 detik setelah nabrak
+            }, 1200); 
         }
 
         function winGame() {
             isPlaying = false; 
             cancelAnimationFrame(gameLoopId);
             document.getElementById("game-area").style.display = "none";
-            document.body.style.background = "#2c3e50"; 
+            document.body.style.background = "#0f172a"; 
             fireConfetti();
             setTimeout(() => { document.getElementById("win-modal").classList.add("show"); }, 500);
         }
@@ -334,17 +358,17 @@
         function triggerPunchline() {
             document.getElementById("win-modal").style.display = "none";
             document.getElementById("punchline-screen").style.display = "flex";
-            document.body.style.background = "#f5f6fa"; 
         }
 
         const spinOptions = [
-            "Kopi Susu keluarga ! ☕", 
-            "Uang Tunai Rp. 1.000.000 ! 💸", 
-            "Voucher Funworld Gratis! ✨", 
-            "Gw Anterin Pulang Sampe Rumah! 🛡️", 
-            "Makan Siang Gw bayarin ! 🍱"
+            "Kopi Susu Keluarga! ☕", 
+            "Uang Tunai Rp 1.000.000! 💸", 
+            "Voucher Funworld! ✨", 
+            "Gw Anterin Pulang! 🛡️", 
+            "Makan Siang Gw Bayarin! 🍱",
+            "Tas Branded! 👜"
         ];
-        const finalJoke = "ZONK! ❌ LO YANG HARUS TRAKTIR GW HARI INI! 🍕🤣";
+        const finalJoke = "ZONK! ❌ LO YANG TRAKTIR GW HARI INI! 🤣";
 
         function startSpin() {
             document.getElementById('spin-btn').style.display = 'none'; 
@@ -352,26 +376,30 @@
             resultBox.classList.add('spinning');
             
             let rollInterval = setInterval(() => {
-                resultBox.innerText = spinOptions[Math.floor(Math.random() * spinOptions.length)];
-            }, 80);
+                resultBox.innerHTML = `<span style="position:relative; z-index:10;">${spinOptions[Math.floor(Math.random() * spinOptions.length)]}</span>`;
+            }, 70); // Putar sangat cepat ala mesin slot
 
+            // Berhenti setelah 4.5 detik
             setTimeout(() => {
                 clearInterval(rollInterval);
                 resultBox.classList.remove('spinning');
                 resultBox.classList.add('winner');
-                resultBox.innerText = finalJoke; 
+                resultBox.innerHTML = `<span style="position:relative; z-index:10;">${finalJoke}</span>`;
                 
+                // Bikin seluruh body bergetar pas zonk
+                document.body.classList.add('shake-screen');
+                setTimeout(() => document.body.classList.remove('shake-screen'), 500);
+
                 fireConfetti();
                 setTimeout(fireConfetti, 500);
 
                 document.getElementById('final-msg').style.display = 'block';
-            }, 4000);
+            }, 4500);
         }
 
-        // Fungsi Konfeti yang dioptimalkan
         function fireConfetti() {
-            const colors = ['#f1c40f', '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#ff4757'];
-            for(let i = 0; i < 40; i++) {
+            const colors = ['#fbc531', '#e1b12c', '#00d2ff', '#ff4757', '#2ecc71'];
+            for(let i = 0; i < 50; i++) {
                 const conf = document.createElement('div');
                 conf.classList.add('confetti');
                 conf.style.left = Math.random() * 100 + 'vw';
@@ -383,8 +411,6 @@
                 conf.style.animationDelay = (Math.random() * 0.5) + 's';
                 
                 document.body.appendChild(conf);
-                
-                // Menghapus konfeti untuk melegakan RAM HP
                 setTimeout(() => conf.remove(), (duration + 1) * 1000);
             }
         }
