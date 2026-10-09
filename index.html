@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&family=VT323&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: none; } /* touch-action none penting agar layar tidak ketarik */
 
         body {
             background-color: #2c3e50; font-family: 'Poppins', sans-serif;
@@ -43,17 +43,39 @@
         .tap-hint { position: absolute; top: 40%; width: 100%; text-align: center; font-family: 'VT323', monospace; font-size: 1.5rem; color: #e74c3c; animation: blink 1.5s infinite; opacity: 0.6; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
+        /* Pesan Ketabrak (Pengganti Alert) */
+        #crash-msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(231, 76, 60, 0.9); color: white; padding: 15px 30px;
+            border-radius: 10px; font-weight: bold; font-size: 1.2rem; text-align: center;
+            z-index: 50; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
         .sun { position: absolute; top: 20px; right: 40px; font-size: 50px; }
-        .cloud { position: absolute; right: -100px; opacity: 0.8; font-size: 40px; animation: floatClouds infinite linear; }
-        @keyframes floatClouds { from { transform: translateX(0); } to { transform: translateX(-120vw); } }
+        
+        /* Awan dipindah menggunakan Transform (Hardware Accelerated) */
+        .cloud { position: absolute; left: 100%; opacity: 0.8; font-size: 40px; animation: floatClouds infinite linear; }
+        @keyframes floatClouds { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-150vw); } 
+        }
 
-        #player { position: absolute; bottom: 30px; left: 50px; font-size: 50px; z-index: 10; transform-origin: bottom center; }
+        /* Player dipindah menggunakan Transform Y */
+        #player { position: absolute; bottom: 30px; left: 50px; font-size: 50px; z-index: 10; }
         .jump { animation: jumpAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1); }
-        @keyframes jumpAnim { 0% { bottom: 30px; } 50% { bottom: 180px; } 100% { bottom: 30px; } }
+        @keyframes jumpAnim { 
+            0% { transform: translateY(0); } 
+            50% { transform: translateY(-160px); } 
+            100% { transform: translateY(0); } 
+        }
 
-        #obstacle { position: absolute; bottom: 30px; right: -100px; font-size: 50px; z-index: 10; }
+        /* Obstacle dipindah menggunakan Transform X */
+        #obstacle { position: absolute; bottom: 30px; left: 100%; font-size: 50px; z-index: 10; }
         .move { animation: moveAnim 1.4s infinite linear; }
-        @keyframes moveAnim { 0% { right: -100px; } 100% { right: 100%; } }
+        @keyframes moveAnim { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-120vw); } 
+        }
 
         #ground {
             position: absolute; bottom: 0; width: 100%; height: 30px;
@@ -149,52 +171,43 @@
 </head>
 <body>
 
-    <!-- Layar Start -->
     <div id="start-screen">
         <h1>OFFICE RUSH</h1>
-        <p>Bantu kucing ini kabur dari tumpukan PSM & Surat Konfirmasi Perpanjangan! Lompatin semuanya buat ambil kadomu!</p>
+        <p>Bantu kucing ini kabur dari tumpukan PSM & Surat Konfirmasi! Lompatin semuanya buat ambil kadomu!</p>
         <button class="btn-start" onclick="startGame()">START 🎮</button>
     </div>
 
-    <!-- Layar Game -->
     <div id="game-area">
         <div id="score-board">Lolos: 0 / 5</div>
-        <div class="tap-hint">👆 TAP LAYAR UNTUK LOMPAT</div>
+        <div class="tap-hint">👆 TAP LAYAR</div>
+        <div id="crash-msg">Ketabrak PSM!<br>Mengulang...</div>
         <div class="sun">☀️</div>
-        <div class="cloud" style="top: 20px; animation-duration: 20s;">☁️</div>
-        <div class="cloud" style="top: 70px; font-size:30px; animation-duration: 15s;">☁️</div>
+        <div class="cloud" style="top: 20px; animation-duration: 15s;">☁️</div>
+        <div class="cloud" style="top: 70px; font-size:30px; animation-duration: 20s; animation-delay: 2s;">☁️</div>
         <div id="player">🐱</div>
         <div id="obstacle">📑</div>
         <div id="ground"></div>
     </div>
 
-    <!-- Layar Kemenangan -->
     <div id="win-modal">
         <div class="card">
             <div class="card-header">🎂</div>
             <h1>LULUS UJI KESABARAN!</h1>
             <p>
                 Happy Birthday Mba Ebhy! 🎉<br><br>
-                Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal kerjaan sebenarnya gak ada <span class="highlight">wkwkwkwk</span>, Sehat dan sukses terus ya!<br><br>
+                Semakin bertambah usia, semoga makin terlihat sok sibuk di kantor padahal mah pura - pura kerja <span class="highlight">wkwkwkwk</span>. Sehat dan sukses terus ya!<br><br>
                 Sebagai apresiasi, gue udah siapin <span class="highlight">Sistem Undian</span> buat nentuin Kado Istimewa lo hari ini!
             </p>
-            
             <span class="arrow-down">⬇️ ⬇️ ⬇️</span>
             <button class="btn-claim" onclick="triggerPunchline()">🎁 TENTUKAN KADOMU!</button>
         </div>
     </div>
 
-    <!-- PUNCHLINE: ROULETTE UNDIAN -->
     <div id="punchline-screen">
         <div class="punch-title">MESIN UNDIAN<br>ULANG TAHUN 🎰</div>
         <div class="punch-sub">Tekan tombol SPIN untuk mengacak kado Istimewa-mu hari ini!</div>
-        
-        <div class="spin-box" id="spin-result">
-            ???
-        </div>
-
+        <div class="spin-box" id="spin-result">???</div>
         <button class="btn-spin" id="spin-btn" onclick="startSpin()">SPIN SEKARANG!</button>
-
         <div id="final-msg">
             Wkwkwk muka lu pasti sempet kegirangan kan 😂<br><br>
             Happy birthday sekali lagi ya! Doa terbaik buat lu. Btw, traktiran tetep ditunggu (seikhlasnya aja asal enak). 🥂
@@ -202,15 +215,15 @@
     </div>
 
     <script>
-        // --- GAME LOGIC ---
         const player = document.getElementById("player");
         const obstacle = document.getElementById("obstacle");
         const scoreBoard = document.getElementById("score-board");
+        const crashMsg = document.getElementById("crash-msg");
         
         let isPlaying = false; 
         let score = 0; 
         let passed = false; 
-        let gameLoopId; // Diganti untuk requestAnimationFrame
+        let gameLoopId; 
 
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
@@ -222,19 +235,18 @@
             }, 600);
         }
 
-        function jump(e) {
-            if(e) e.preventDefault(); // Mencegah double tap zoom di HP
+        // Pointer down lebih responsif di HP
+        document.addEventListener('pointerdown', (e) => {
+            // Hindari lompat kepencet pas lagi pencet tombol start/spin
+            if(e.target.tagName === 'BUTTON') return; 
+            
             if (!isPlaying) return;
             if (!player.classList.contains("jump")) {
                 player.classList.add("jump");
                 setTimeout(() => { player.classList.remove("jump"); }, 600);
             }
-        }
+        });
 
-        document.addEventListener('touchstart', jump, {passive: false});
-        document.addEventListener('mousedown', jump);
-
-        // Menggunakan requestAnimationFrame untuk menghindari lag di HP
         function startGameLoop() {
             function update() {
                 if (!isPlaying) return;
@@ -242,13 +254,13 @@
                 let pRect = player.getBoundingClientRect();
                 let oRect = obstacle.getBoundingClientRect();
 
-                // Deteksi Tabrakan (Logika disempurnakan)
-                let hitX = pRect.right > oRect.left + 20 && pRect.left < oRect.right - 20;
+                // Hitbox Collision yang lebih rapi (Toleransi 15px agar tidak kaku)
+                let hitX = pRect.right - 15 > oRect.left && pRect.left + 15 < oRect.right;
                 let hitY = pRect.bottom > oRect.top + 10;
 
                 if (hitX && hitY) {
                     gameOver();
-                    return; // Stop frame saat ini
+                    return; 
                 }
 
                 // Hitung Skor
@@ -262,7 +274,8 @@
                     }
                 }
                 
-                if (oRect.left > pRect.right + 50) {
+                // Reset flag passed jika halangan sudah jauh di kiri
+                if (oRect.right < 0) {
                     passed = false;
                 }
 
@@ -274,26 +287,38 @@
         function gameOver() {
             isPlaying = false; 
             cancelAnimationFrame(gameLoopId);
+            
+            // Hentikan animasi
             obstacle.style.animationPlayState = 'paused'; 
             player.style.animationPlayState = 'paused';
             
+            // Tampilkan pesan ketabrak (ganti fungsi alert browser)
+            crashMsg.style.display = 'block';
+            
             setTimeout(() => {
-                alert("Wkwk ketabrak PSM! Ulang lagi ya!");
+                crashMsg.style.display = 'none';
+                
+                // Reset posisi & skor
                 obstacle.classList.remove("move"); 
                 player.classList.remove("jump");
-                void obstacle.offsetWidth; // Trigger reflow
+                
+                // Trigger reflow sejenak
+                void obstacle.offsetWidth; 
+                
                 obstacle.style.animationPlayState = 'running'; 
                 player.style.animationPlayState = 'running';
+                
                 score = 0; 
                 passed = false; 
                 scoreBoard.innerText = `Lolos: ${score} / 5`;
                 
+                // Mulai ulang
                 setTimeout(() => { 
                     obstacle.classList.add("move"); 
                     isPlaying = true; 
-                    startGameLoop(); // Mulai ulang loop
+                    startGameLoop(); 
                 }, 200);
-            }, 50);
+            }, 1500); // Jeda 1.5 detik setelah nabrak
         }
 
         function winGame() {
@@ -305,7 +330,7 @@
             setTimeout(() => { document.getElementById("win-modal").classList.add("show"); }, 500);
         }
 
-        // --- PUNCHLINE LOGIC (SPIN WHEEL) ---
+        // --- PUNCHLINE LOGIC ---
         function triggerPunchline() {
             document.getElementById("win-modal").style.display = "none";
             document.getElementById("punchline-screen").style.display = "flex";
@@ -322,37 +347,31 @@
         const finalJoke = "ZONK! ❌ LO YANG HARUS TRAKTIR GW HARI INI! 🍕🤣";
 
         function startSpin() {
-            document.getElementById('spin-btn').style.display = 'none'; // Sembunyikan tombol
+            document.getElementById('spin-btn').style.display = 'none'; 
             const resultBox = document.getElementById('spin-result');
             resultBox.classList.add('spinning');
             
-            // Animasi ganti-ganti teks dengan cepat
             let rollInterval = setInterval(() => {
                 resultBox.innerText = spinOptions[Math.floor(Math.random() * spinOptions.length)];
             }, 80);
 
-            // Berhenti setelah 4 detik
             setTimeout(() => {
                 clearInterval(rollInterval);
                 resultBox.classList.remove('spinning');
                 resultBox.classList.add('winner');
-                resultBox.innerText = finalJoke; // Kena jebakan!
+                resultBox.innerText = finalJoke; 
                 
-                // Dobel Konfeti buat ngeledek
                 fireConfetti();
                 setTimeout(fireConfetti, 500);
 
-                // Munculin pesan terakhir
                 document.getElementById('final-msg').style.display = 'block';
             }, 4000);
         }
 
-        // Fungsi Konfeti (Disempurnakan agar tidak bikin HP Lag)
+        // Fungsi Konfeti yang dioptimalkan
         function fireConfetti() {
             const colors = ['#f1c40f', '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#ff4757'];
-            const confettiCount = 50; // Dikurangi jadi 50 per tembakan biar HP gak panas
-            
-            for(let i = 0; i < confettiCount; i++) {
+            for(let i = 0; i < 40; i++) {
                 const conf = document.createElement('div');
                 conf.classList.add('confetti');
                 conf.style.left = Math.random() * 100 + 'vw';
@@ -364,11 +383,9 @@
                 conf.style.animationDelay = (Math.random() * 0.5) + 's';
                 
                 document.body.appendChild(conf);
-
-                // PENTING: Hapus elemen konfeti dari memori setelah animasi selesai
-                setTimeout(() => {
-                    conf.remove();
-                }, (duration + 1) * 1000);
+                
+                // Menghapus konfeti untuk melegakan RAM HP
+                setTimeout(() => conf.remove(), (duration + 1) * 1000);
             }
         }
     </script>
